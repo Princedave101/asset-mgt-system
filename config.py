@@ -3,18 +3,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
-    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.googlemail.com')
-    MAIL_PORT = int(os.environ.get('MAIL_PORT', '587'))
-    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'true').lower() in ['true', 'on', '1']
-    MAIL_USE_SSL = False
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', "rbpr xfbf ycds lije")
+    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+    MAIL_PORT = int(os.environ.get('MAIL_PORT', 465))
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME', "dpokeke@gmail.com")
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', "grssgfbdmdwhcfgj")
     MAIL_SUBJECT_PREFIX = "[Flow Asset]"
-    APP_MAIL_SENDER = 'HR <hr@example.com>'
-    APP_HR = os.environ.get('APP_HR')
-    APP_MANAGER = os.environ.get('APP_MANAGER')
+    APP_HR = os.environ.get('APP_HR', "dpokeke@gmail.com")
+    APP_MANAGER = os.environ.get('APP_MANAGER', "pdokek07@gmail.com")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    #rbpr xfbf ycds lije
 
     @staticmethod
     def init_app(app):

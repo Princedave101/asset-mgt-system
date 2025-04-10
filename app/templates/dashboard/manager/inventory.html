@@ -29,7 +29,7 @@
 {%block page_content %}
 <div class="requestManager">
     <div class="sectionHeader">
-        <h2>Asset Requests</h2>
+        <h2>Stock</h2>
 
         <select class="filterDropdown">
             <option>All Statuses</option>
@@ -41,32 +41,22 @@
     <table>
         <thead>
             <tr>
-                <th>Request ID</th>
-                <th>Employee</th>
-                <th>Asset Type</th>
+                <th>Item S/N</th>
+                <th>Asset Category</th>
                 <th>Item Name</th>
-                <th>Request Date</th>
-                <th>quantity</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>Total Quantity</th>
+                <th>Avaliable Quantity</th>
             </tr>
         </thead>
         <tbody>
-            {% if pending_requests%}
-                {% for request in pending_requests%}
+            {% if stocks %}
+                {% for stock in stocks%}
                 <tr>
-                    <td>{{request.id}}</td>
-                    <td>{{request.employee.username}}</td>
-                    <td>{{request.item.asset.name}}</td>
-                    <td>{{request.item.name}}</td>
-                    <td>{{request.request_date}}</td>
-                    <td>{{request.quantity}}</td>
-                    <td>{{request.status}}</td>
-                    <td class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a class="btn btn-outline-success" href="{{url_for('main.mg.approve_request', request_id=request.id)}}" role="button">Aprrove</a>
-                        <a class="btn btn-outline-danger" href="{{url_for('main.mg.decline_request', request_id=request.id)}}" role="button">Decline</a>
-                    </td>
-                </tr>
+                    <td>{{stock.item.serial_number}}</td>
+                    <td>{{stock.item.asset.name}}</td>
+                    <td>{{stock.item.name}}</td>
+                    <td>{{stock.total_quantity}}</td>
+                    <td>{{stock.available_quantity}}</td>
                 {%endfor%}
             {%else%}
             <tr>

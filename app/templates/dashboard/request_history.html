@@ -1,0 +1,56 @@
+{% extends 'dashboard/base.html'%}
+{% from "bootstrap5/form.html" import render_form %}
+
+{% block title %}Flow Asset - Request History{% endblock %}
+
+{%block page_header%}{%endblock%}
+
+{%block page_content%}
+<!-- assets -->
+<div class="requestWrapper" id="requestSection">
+    <div class="head">
+        <h2>Request History</h2>
+    </div>
+    <div class="requestTable">
+        <table>
+            <thead>
+                <tr>
+                    <th class="">Item ID</th>
+                    <th class="">Item Name</th>
+                    <th class="">Made By</th>
+                    <th class="">Reason</th>
+                    <th class="">Quantity</th>
+                    <th class="">Request Date</th>
+                    <th class="">Assigned Date</th>
+                    <th class="">Forwarded</th>
+                    <th class="">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%if requests %}
+                {%for request in requests %}
+                <tr>
+                    <td>{{request.item.serial_number}}</td>
+                    <td>{{request.item.name}}</td>
+                    <td><a href="{{url_for('main.profile', employee_number=request.employee.employee_number)}}">{{request.employee.employee_number}}</a></td>
+                    <td>{{request.reason}}</td>
+                    <td>{{request.quantity}}</td>
+                    <td>{{request.request_date}}</td>
+                    <td>{{request.decision_date}}</td>
+                    <td>{{request.forwarded}}</td>
+                    <td>{{request.status}}</td>
+                    {% if current_user.can(Task.TRACK_REQUEST) %}
+                    <td><a class="btn btn-outline-danger" href="{{url_for('main.hr.delete_request', id=request.id)}}" role="button">Delete</a></td>
+                    {%endif%}
+                </tr>
+                {%endfor%}
+                {%else%}
+                <tr class="nodata">
+                    <td colspan="5">No data available</td>
+                </tr>
+                {%endif%}
+            </tbody>
+        </table>
+    </div>
+</div>
+{%endblock%}

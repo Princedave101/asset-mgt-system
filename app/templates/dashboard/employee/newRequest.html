@@ -1,120 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Request Assets</title>
-    <link rel="stylesheet" href="\app\static\css\dashboard.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/afaa755ae7.js" crossorigin="anonymous"></script>
+{% extends 'dashboard/base.html'%}
 
-    <script>
-        function updateassetList() {
-            // Get first dropdown selection
-            const typeList = document.getElementById("assetType").value;
-            const assetList = document.getElementById("items");
+{%block title%}Flow Asset - Dashboard{%endblock%}
 
-            // Clear existing options
-            assetList.innerHTML = "";
+{%block side_bar%}
+<!-- sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="logo"></div>
+    <ul class="menu">
+        <li>
+            <a href="{{url_for('main.index')}}" >
+                <i class="fa-solid fa-user"></i><span>Dashboard</span>
+            </a>
+        </li>
+        {%block specific_nav_link%}
+        <li>
+            <a href="{{url_for('main.request_asset')}}">
+                <i class="fa-solid fa-bars-progress"></i><span>Request Asset</span>
+            </a>
+        </li>
+        {%endblock%}
+        <li>
+            <a href="{{url_for('main.view_assets', employee_number=current_user.employee_number)}}">
+                <i class="fa-solid fa-list-check"></i><span>Assigned Assets</span>
+            </a>
+        </li>
+        <li class="logout">
+            <a href="{{url_for('auth.logout')}}">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log Out</span>
+            </a>
+        </li>
+    </ul>
+</div>
+{%endblock%}
 
-            // Define options for each category
-            const options = {
-                electDevices: ["", "Telephone", "Projectors", "Air Conditioners", "CCTV Cameras"],
-                itDevices: ["", "Laptop", "Monitors", "Keyboards", "Routers", "Harddisk", "Printer"],
-                furniture: ["", "Conference Tables", "Office Chairs", "Cabinets", "Cubicles"],
-                transport: ["", "Company Cars", "Delivery Vans", "Bicycles"]
-            };
+{%block page_header%}Employee Dashboard{%endblock%}
 
-            // Populate second dropdown based on selection
-            if (typeList in options) {
-                options[typeList].forEach(function(item) {
-                    let option = document.createElement("option");
-                    option.value = item.toLowerCase();
-                    option.textContent = item;
-                    assetList.appendChild(option);
-                });
-            }
-        }
-    </script>
-</head>
-<body>
-    <!-- sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="logo"></div>
-        <ul class="menu">
-            <li>
-                <a href="\app\templates\dashboard\employee\employeedashboard.html" >
-                    <i class="fa-solid fa-user"></i><span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="\app\templates\dashboard\employee\newRequest.html">
-                    <i class="fa-solid fa-bars-progress"></i><span>Requests</span>
-                </a>
-            </li>
-            <li>
-                <a href="\app\templates\dashboard\employee\employeeAssets.html">
-                    <i class="fa-solid fa-list-check"></i><span>Assigned Assets</span>
-                </a>
-            </li>
-            <li class="logout">
-                <a href="\app\templates\auth\login.html">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log Out</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+{%block page_content %}
+<div class="requestWrapper">
+    <h2>Create new request</h2>
+    
+    <form action="" class="requestForm" method="post" novalidate>
 
-    <section class="mainContent">
-        <!-- header -->
-        <div class="headerWrapper">
-            <div class="headerTitle">
-                <h2> Employee Dashboard</h2>
-
-                <!-- darkmode toggle functionalitiy isn't working yet -->
-                <div>
-                <i class="fa-solid fa-bars"></i>
-                <i class="fa-solid fa-x"></i>
-                <button id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
-                </div>
+        {{ form.hidden_tag() }}
+        {{ form.item.label }}
+        {% if form.item.errors %}
+        {{ form.item(id="items", class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.item.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
             </div>
-        </div>
+        {% else %}
+        {{ form.item(id="items", class="form-control form-control-lg") }}
+        {% endif %}
+        
+        {{ form.quantity.label }}
+        {% if form.quantity.errors %}
+        {{ form.quantity(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.quantity.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+        {{ form.quantity(class="form-control form-control-lg") }}
+        {% endif %}
+        
+        {{ form.reason.label }}
+        {% if form.reason.errors %}
+        {{ form.reason(id="requestReason", class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.reason.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+        {{ form.reason(id="requestReason", class="form-control form-control-lg") }}
+        {% endif %}
+        
+        {{ form.submit(class="button") }}
+    </form>
+</div>
+{%endblock%}
 
-        <div class="requestWrapper">
-            <h2>Create new request</h2>
-            
-            <form action="requestAsset" class="requestForm" method="post">
+{% block scripts %}
+{{super()}}
+<script>
+    function updateassetList() {
+        // Get first dropdown selection
+        const typeList = document.getElementById("assetType").value;
+        const assetList = document.getElementById("items");
 
-                <label for="employeeId"> Employee's ID</label>
-                <input type="text" name="employeeId" id="employeeId">
+        // Clear existing options
+        assetList.innerHTML = "";
 
-                <label for="employeeName">Employee's Name</label>
-                <input type="text" name="employeeName" id="employeeName">
+        // Define options for each category
+        const options = {
+            electDevices: ["", "Telephone", "Projectors", "Air Conditioners", "CCTV Cameras"],
+            itDevices: ["", "Laptop", "Monitors", "Keyboards", "Routers", "Harddisk", "Printer"],
+            furniture: ["", "Conference Tables", "Office Chairs", "Cabinets", "Cubicles"],
+            transport: ["", "Company Cars", "Delivery Vans", "Bicycles"]
+        };
 
-                <label for="assetType">Select Asset</label>
-                <select name="assetType" id="assetType" onchange="updateassetList()">
-                    <option value="">--Select asset type--</option>
-                    <option value="electDevices">Electrical and Electronics Devices</option>
-                    <option value="itDevices">IT Equipment</option>
-                    <option value="furniture">Office Furniture</option>
-                    <option value="transport">Transportation Assets</option>
-                </select>
-
-                <label for="items">Select Items</label>
-                <select name="items" id="items">
-                    <option value="">--Select an asset type first--</option>
-                </select>
-
-                <label for="requestReason">Reason for request</label>
-                <textarea name="requestReason" id="requestReason"></textarea>
-
-                <a href=""> <button type="submit" class="button">Submit Request</button></a>
-
-            </form>
-        </div>
-
-    </section>
-</body>
-</html>
+        // Populate second dropdown based on selection
+        if (typeList in options) {
+            options[typeList].forEach(function(item) {
+                let option = document.createElement("option");
+                option.value = item.toLowerCase();
+                option.textContent = item;
+                assetList.appendChild(option);
+            });
+        }
+    }
+</script>
+{% endblock %}

@@ -12,14 +12,11 @@ class LoginForm(FlaskForm):
 
 
 class SignUpForm(FlaskForm):
-    deptName = StringField("Department Name eg IT, CSC etc.", validators=[DataRequired(), Length(max=3)])
+    deptName = StringField("Department Name eg IT, CSC etc.", validators=[DataRequired(), Length(max=6)])
     email = EmailField('Email', validators=[DataRequired(), Length(1, 64),
                                              Email()])
     username = StringField('Username', validators=[
-        DataRequired(), Length(1, 64),
-        Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
-               'Usernames must have only letters, numbers, dots or '
-               'underscores')])
+        DataRequired(), Length(1, 64)])
     password = PasswordField('Password', validators=[
         DataRequired(), EqualTo('confirmPassword', message='Passwords must match.')])
     confirmPassword = PasswordField('Confirm password', validators=[DataRequired()])

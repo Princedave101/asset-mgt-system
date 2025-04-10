@@ -1,0 +1,1 @@
+Your Request on Item :{{request.item}}, Quantity:{{request.quantity}} was canceled

@@ -1,0 +1,50 @@
+{% extends 'dashboard/base.html'%}
+{% from 'bootstrap5/form.html' import render_form%}
+
+{%block title%}Flow Asset- Add Employee{%endblock%}
+
+{%block side_bar%}
+<div class="sidebar" id="sidebar">
+    <div class="logo"></div>
+    <ul class="menu">
+        <li>
+            <a href="{{url_for('main.hr.hr_dashboard')}}" >
+                <i class="fa-solid fa-user"></i><span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{url_for('main.hr.view_all_assigned_assets')}}">
+                <i class="fa-solid fa-list-check"></i><span>Assigned Assets</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{url_for('main.hr.view_employees')}}">
+                <i class="fa-solid fa-users-line"></i><span>Employees</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{url_for('main.hr.add_employee')}}">
+                <i class="fa-solid fa-users-line"></i><span>Create Employee</span>
+            </a>
+        </li>
+        <li class="logout">
+            <a href="{{url_for('auth.logout')}}">
+                <i class=""></i><span>Log Out</span>
+            </a>
+        </li>
+    </ul>
+</div>
+{%endblock%}
+ 
+<!-- main content -->
+{%block page_header%}HR Dashboard{%endblock%}
+{%block page_content %}
+<div class="d-flex flex-column justify-content-center align-items-center w-100">
+    <div>
+        <h2>Add Employee</h2>
+    </div>
+    <div class="w-75">
+        {{render_form(form, novalidate=True)}}
+    </div>
+</div>
+{%endblock%}

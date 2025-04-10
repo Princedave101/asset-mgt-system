@@ -2,7 +2,7 @@ import os
 import click
 from flask_migrate import Migrate
 from app import create_app, db
-from app.models import Role, Employee, Department
+from app.models import Role, Employee, Department, Asset, AssetAssignment, AssetRequest, Item, StockInventory
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
@@ -10,7 +10,7 @@ migrate = Migrate(app, db)
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db, Emp=Employee, Role=Role, Dept=Department , 
+    return dict(db=db, Emp=Employee, Role=Role, Dept=Department, Asset=Asset, AR=AssetRequest, AA=AssetAssignment, Item=Item,StockInventory=StockInventory,
                 r=Role(name="Admin"),
                 d=Department(name="IT", location="Old yaba"),
                 e1=Employee(email="dpokeke@gmail.com", password="jesus", username="david"),

@@ -1,0 +1,16 @@
+{% extends 'dashboard/base.html'%}
+{% from "bootstrap5/form.html" import render_form %}
+
+
+{% block title %}Flow Asset - Edit Profile{% endblock %}
+
+{% block page_content %}
+<div class="container d-flex flex-column justify-content-center align-items-center w-100">
+    <div class="page-header">
+        <h1>Edit Profile</h1>
+    </div>
+    <div class="w-75">
+         {{ render_form(form, novalidate=True) }}
+    </div>
+</div>
+{% endblock %}

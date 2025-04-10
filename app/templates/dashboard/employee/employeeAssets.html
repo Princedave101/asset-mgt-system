@@ -1,82 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assets</title>
-    <link rel="stylesheet" href="\app\static\css\dashboard.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/afaa755ae7.js" crossorigin="anonymous"></script>
-</head>
-<body>
-    <!-- sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="logo"></div>
-        <ul class="menu">
-            <li>
-                <a href="\app\templates\dashboard\employee\employeedashboard.html" >
-                    <i class="fa-solid fa-user"></i><span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="\app\templates\dashboard\employee\newRequest.html">
-                    <i class="fa-solid fa-bars-progress"></i><span>Requests</span>
-                </a>
-            </li>
-            <li>
-                <a href="\app\templates\dashboard\employee\employeeAssets.html">
-                    <i class="fa-solid fa-list-check"></i><span>Assigned Assets</span>
-                </a>
-            </li>
-            <li class="logout">
-                <a href="\app\templates\auth\login.html">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log Out</span>
-                </a>
-            </li>
-        </ul>
+{% extends 'dashboard/base.html'%}
+
+{%block title%}Flow Asset - Assigned Asset{%endblock%}
+
+{%block page_header%}Employee Dashboard{%endblock%}
+
+{%block side_bar%}
+<!-- sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="logo"></div>
+    <ul class="menu">
+        <li>
+            <a href="{{url_for('main.index')}}" >
+                <i class="fa-solid fa-user"></i><span>Dashboard</span>
+            </a>
+        </li>
+        {%block specific_nav_link%}
+        <li>
+            <a href="{{url_for('main.request_asset')}}">
+                <i class="fa-solid fa-bars-progress"></i><span>Request Asset</span>
+            </a>
+        </li>
+        {%endblock%}
+        <li>
+            <a href="{{url_for('main.view_assets', employee_number=current_user.employee_number)}}">
+                <i class="fa-solid fa-list-check"></i><span>Assigned Assets</span>
+            </a>
+        </li>
+        <li class="logout">
+            <a href="{{url_for('auth.logout')}}">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log Out</span>
+            </a>
+        </li>
+    </ul>
+</div>
+{%endblock%}
+
+{%block page_content %}
+<div class="assetWrapper">
+    <div class="head">
+        <h2>Assigned Assets</h2>
+        <a href=""> Create new request <i class="fa-solid fa-plus" ></i> </a> 
     </div>
-
-    <!-- main content -->
-    <div class="mainContent">
-        <!-- header -->
-        <div class="headerWrapper">
-            <div class="headerTitle">
-                <h2> Employee Dashboard</h2>
-
-                <!-- darkmode toggle functionalitiy isn't working yet -->
-                <div>
-                <i class="fa-solid fa-bars"></i>
-                <i class="fa-solid fa-x"></i>
-                <button id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <div class="assetWrapper">
-            <div class="head">
-                <h2>Assigned Assets</h2>
-                <a href="newRequest.html"> Create new request     <i class="fa-solid fa-plus" ></i> </a> 
-            </div>
-            <div class="requestTable">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="idRow">Asset ID</th>
-                            <th class="nameRow">Name</th>
-                            <th class="quantityRow">Quantity</th>
-                            <th class="dateRow">Date Assigned</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="nodata">
-                            <td colspan="4">No data available</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-         </div>
+    <div class="requestTable">
+        <table>
+            <thead>
+                <tr>
+                    <th class="idRow">Item ID</th>
+                    <th class="idRow">Asset Type</th>
+                    <th class="nameRow">Name</th>
+                    <th class="quantityRow">Quantity</th>
+                    <th class="dateRow">Date Assigned</th>
+                </tr>
+            </thead>
+            <tbody>
+            {%if assigned_assets%}
+            {%for assigned_asset in assigned_assets%}
+            <tr>
+                <td>{{assigned_asset.item_id}}</td>
+                <td>{{assigned_asset.item.asset.name}}</td>
+                <td>{{assigned_asset.item.name}}</td>
+                <td>{{assigned_asset.quantity}}</td>
+                <td>{{assigned_asset.assigned_date}}</td>
+                <td><a class="btn btn-outline-danger" href="{{url_for('main.relenquish_asset', id=assigned_asset.item.id)}}" role="button">Relenquish</a></td>
+            </tr>
+            {%endfor%}
+            {%else%}
+            <tr class="nodata">
+                <td colspan="5">No data available</td>
+            </tr>
+            {%endif%}
+            </tbody>
+        </table>
     </div>
-</body>
-</html>
+    </div>
+{%endblock%}

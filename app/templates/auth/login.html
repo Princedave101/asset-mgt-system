@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 {% endblock %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Flow Asset - Login{% endblock %}
 
 {% block page_content %}
 <div class="form_container login">
@@ -42,7 +42,7 @@
             {{ form.rememberMe(class="form-check-input") }}
             {{ form.rememberMe.label(class="form-check-label") }}
         </div>
-        <a href="employeedashboard.html">{{ form.submit(class="button")}}</a>
+        <a href="">{{ form.submit(class="button")}}</a>
         <p>No account? <a href="{{url_for('auth.register')}}" class="links">Create an account</a></p>
     </form>
 </div>

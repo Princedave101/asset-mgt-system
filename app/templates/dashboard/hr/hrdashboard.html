@@ -1,92 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR Dashboard</title>
-    <link rel="stylesheet" href="\app\static\css\dashboard.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/afaa755ae7.js" crossorigin="anonymous"></script>
-</head>
-<body>
-    <!-- sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="logo"></div>
-        <ul class="menu">
-            <li>
-                <a href="\app\templates\dashboard\hr\hrdashboard.html" >
-                    <i class="fa-solid fa-user"></i><span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="\app\templates\dashboard\hr\hrAssignedAssets.html">
-                    <i class="fa-solid fa-list-check"></i><span>Assigned Assets</span>
-                </a>
-            </li>
-            <li>
-                <a href="\app\templates\dashboard\hr\hrEmployeeMgt.html">
-                    <i class="fa-solid fa-users-line"></i><span>Employees</span>
-                </a>
-            </li>
-            <li class="logout">
-                <a href="">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log Out</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+{% extends 'dashboard/base.html'%}
 
-    <!-- main content -->
-    <div class="mainContent">
-        <div class="headerWrapper">
-            <div class="headerTitle">
-                <h2> HR Dashboard</h2>
+{%block title%}Flow Asset- HR Dashboard{%endblock%}
 
-                <!-- darkmode and mobile view sidebar toggle functionalitiy isn't working yet -->
-                <div>
-                <i class="fa-solid fa-bars" id="fa-bars"></i>
-                <i class="fa-solid fa-x" id="fa-x"></i>
-                <button id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
-                </div>
-            </div>
+{%block side_bar%}
+<div class="sidebar" id="sidebar">
+    <div class="logo"></div>
+    <ul class="menu">
+        <li>
+            <a href="{{url_for('main.hr.hr_dashboard')}}" >
+                <i class="fa-solid fa-user"></i><span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{url_for('main.hr.view_all_assigned_assets')}}">
+                <i class="fa-solid fa-list-check"></i><span>Assigned Assets</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{url_for('main.hr.view_employees')}}">
+                <i class="fa-solid fa-users-line"></i><span>Employees</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{url_for('main.hr.add_employee')}}">
+                <i class="fa-solid fa-users-line"></i><span>Create Employee</span>
+            </a>
+        </li>
+        <li class="logout">
+            <a href="{{url_for('auth.logout')}}">
+                <i class=""></i><span>Log Out</span>
+            </a>
+        </li>
+    </ul>
+</div>
+{%endblock%}
+
+<!-- main content -->
+{%block page_header%}HR Dashboard{%endblock%}
+
+{%block page_content %}
+<!-- cards -->
+<div class="cardContainer">
+    <div class="place-request-card cards">
+        <div class="cardHeader">
+            <h3>Pending Requests</h3>
+            <!-- a logic to get the number of pending request goes here -->
+            <p id="numberOfRequestsPending">{{pending_requests_count}}</p> 
         </div>
-        <!-- requests -->
-        <div class="cardContainer">
-            <div class="requestTable">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="hrNameRow">Asset Name</th>
-                            <th class="employeeNameRow">Employee Name</th>
-                            <th class="hrQuantityRow">Quantity</th>
-                            <th class="hrDateRow">Request Date</th>
-                            <!-- if hr verifies, it goes to manager -->
-                            <th class="statusRow">Verify</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- a data row example  -->
-                        <!-- all tables need to be conected to the database to fill up with it's data  -->
-                        <tr>
-                            <td>Laptop</td>
-                            <td>Divine</td>
-                            <td>4</td>
-                            <td>29-Mar-2025</td>
-                            <!-- button to forward to manager -->
-                            <td><button class="forwardbtn">Forward</button></td>  
-                        </tr>
-                        <tr class="nodata">
-                            <td colspan="5">No data available</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-
-
     </div>
-</body>
-</html>
+    <div class="view-request-card cards">
+        <div class="cardHeader">
+            <h3>Assets Requested</h3>
+            <!-- a logic to get the number of requested assets goes here -->
+            <p id="numberOfAssetsRequested">{{requests_count}}</p>
+        </div>
+        <div class="cardBtn">
+            <a href="{{url_for('main.hr.view_all_requests')}}"><button>View all Requests</button></a>
+        </div>
+    </div>
+    <div class="cards">
+        <div class="cardHeader">
+            <h3>Assigned Assets</h3>
+            <!-- a logic to get the number of assigned assets goes here -->
+            <p id="numberOfAssignedAssets">{{assigned_asset_count}}</p>
+        </div>
+        <div class="cardBtn">
+            <a href="{{url_for('main.hr.view_all_assigned_assets')}}"><button>View All Assets</button></a>
+        </div>
+    </div>
+    <div class="cards">
+        <div class="cardHeader">
+            <h3>Employee Record</h3>
+            <!-- a logic to get the number of assigned assets goes here -->
+            <p id="numberOfAssignedAssets">{{employee_count}}</p>
+        </div>
+        <div class="cardBtn">
+            <a href="{{url_for('main.hr.view_employees')}}"><button>View All Employees</button></a>
+        </div>
+    </div>
+</div>
+
+<div class="requestWrapper" id="requestSection">
+    <div class="head">
+        <h2>Requests</h2>
+    </div>
+    <div class="requestTable">
+        <table>
+            <thead>
+                <tr>
+                    <th class="hrNameRow">Asset Name</th>
+                    <th class="hrNameRow">Asset ID</th>
+                    <th class="employeeNameRow">Employee ID</th>
+                    <th class="employeeNameRow">Employee Name</th>
+                    <th class="hrNameRow">Asset Type</th>
+                    <th class="hrQuantityRow">Quantity</th>
+                    <th class="hrDateRow">Request Date</th>
+                    <th class="hrDateRow">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- a data row example  -->
+                <!-- all tables need to be conected to the database to fill up with it's data  -->
+            {%if pending_requests %}
+            {%for request in  pending_requests%}
+            <tr>
+                <td>{{request.item.name}}</td>
+                <td>{{request.item.serial_number}}</td>
+                <td>{{request.employee.employee_number}}</td>
+                <td>{{request.employee.username}}</td>
+                <td>{{request.item.asset.name}}</td>
+                <td>{{request.quantity}}</td>
+                <td>{{request.request_date}}</td>
+                <td>{{request.status}}</td>
+                <td><a class="btn btn-outline-primary" href="{{url_for('main.hr.forward_request', id=request.id)}}" role="button">Forward</a></td>
+                <td><a class="btn btn-outline-danger" href="{{url_for('main.cancel_request', id=request.id)}}" role="button">Cancel</a></td>
+                <td><a class="btn btn-outline-danger" href="{{url_for('main.hr.delete_request', id=request.id)}}" role="button">Delete</a></td> 
+            </tr>
+            {%endfor%}
+            {%else%}
+            <tr class="nodata">
+                <td colspan="5">No data available</td>
+            </tr>
+            {%endif%}
+            </tbody>
+        </table>
+    </div>
+</div>
+{%endblock%}

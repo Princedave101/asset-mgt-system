@@ -1,8 +1,9 @@
 <p>Dear {{ employee.username }},</p>
-<p>Welcome to <b>Flasky</b>!</p>
+<p>Welcome to <b>Flow Asset</b>!</p>
 <p>To confirm your account please <a href="{{ url_for('auth.confirm', token=token, _external=True) }}">click here</a>.</p>
 <p>Alternatively, you can paste the following link in your browser's address bar:</p>
 <p>{{ url_for('auth.confirm', token=token, _external=True) }}</p>
+<p>This is ur work Id {{ employee.employee_number}}</p>
 <p>Sincerely,</p>
-<p>The Asset Flow Team</p>
+<p>The Flow Asset Team</p>
 <p><small>Note: replies to this email address are not monitored.</small></p>

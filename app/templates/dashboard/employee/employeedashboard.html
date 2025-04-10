@@ -1,119 +1,123 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Dashboard</title>
-    <link rel="stylesheet" href="/app/static/css/dashboard.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/afaa755ae7.js" crossorigin="anonymous"></script>
-    <script src="dash.js"></script>
-</head>
-<body>
-    <!-- sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="logo"></div>
-        <ul class="menu">
-            <li>
-                <a href="\app\templates\dashboard\employee\employeedashboard.html" >
-                    <i class="fa-solid fa-user"></i><span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="\app\templates\dashboard\employee\newRequest.html">
-                    <i class="fa-solid fa-bars-progress"></i><span>Requests</span>
-                </a>
-            </li>
-            <li>
-                <a href="\app\templates\dashboard\employee\employeeAssets.html">
-                    <i class="fa-solid fa-list-check"></i><span>Assigned Assets</span>
-                </a>
-            </li>
-            <li class="logout">
-                <a href="\app\templates\auth\login.html">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log Out</span>
-                </a>
-            </li>
-        </ul>
+{% extends 'dashboard/base.html'%}
+
+{%block title%}Flow Asset - Dashboard{%endblock%}
+
+{%block page_header%}Employee Dashboard{%endblock%}
+
+{%block side_bar%}
+<!-- sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="logo"></div>
+    <ul class="menu">
+        <li>
+            <a href="{{url_for('main.index')}}" >
+                <i class="fa-solid fa-user"></i><span>Dashboard</span>
+            </a>
+        </li>
+        {%block specific_nav_link%}
+        <li>
+            <a href="{{url_for('main.request_asset')}}">
+                <i class="fa-solid fa-bars-progress"></i><span>Request Asset</span>
+            </a>
+        </li>
+        {%endblock%}
+        <li>
+            <a href="{{url_for('main.view_assets', employee_number=current_user.employee_number)}}">
+                <i class="fa-solid fa-list-check"></i><span>Assigned Assets</span>
+            </a>
+        </li>
+        <li class="dropdown">
+            <a href="{{url_for('main.index')}}" class="dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-circle-user"></i><span>Account</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                <li><a class="dropdown-item" href="{{url_for('main.profile', employee_number=current_user.employee_number)}}">Profile</a></li>
+                <li><a class="dropdown-item" href="{{url_for('auth.change_email_request')}}">Change Email</a></li>
+                <li><a class="dropdown-item" href="{{url_for('auth.change_password')}}">Something else here</a></li>
+            </ul>
+        </li>
+        <li class="logout">
+            <a href="{{url_for('auth.logout')}}">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log Out</span>
+            </a>
+        </li>
+    </ul>
+</div>
+{%endblock%}
+
+{%block page_content %}
+<!-- cards -->
+<div class="cardContainer">
+    <div class="place-request-card cards">
+        <div class="cardHeader">
+            <h3>Pending Requests</h3>
+            <!-- a logic to get the number of pending request goes here -->
+            <p id="numberOfRequestsPending">{{pending_requests_count}}</p> 
+        </div>
+        <div class="cardBtn">
+            <a href="{{url_for('main.request_asset')}}"><button>Place new request</button></a>
+        </div>
     </div>
-
-    <!-- main content -->
-    <section class="mainContent"> 
-        <!-- header -->
-        <div class="headerWrapper">
-            <div class="headerTitle">
-                <h2> Employee Dashboard</h2>
-
-                <!-- darkmode and mobile view sidebar toggle functionalitiy isn't working yet -->
-                <div>
-                <i class="fa-solid fa-bars" id="fa-bars"></i>
-                <i class="fa-solid fa-x" id="fa-x"></i>
-                <button id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
-                </div>
-            </div>
+    <div class="view-request-card cards">
+        <div class="cardHeader">
+            <h3>Assets Requested</h3>
+            <!-- a logic to get the number of requested assets goes here -->
+            <p id="numberOfAssetsRequested">{{request_count}}</p>
         </div>
-        <!-- cards -->
-        <div class="cardContainer">
-            <div class="place-request-card cards">
-                <div class="cardHeader">
-                    <h3>Pending Requests</h3>
-                    <!-- a logic to get the number of pending request goes here -->
-                    <p id="numberOfRequestsPending">1</p> 
-                </div>
-                <div class="cardBtn">
-                    <a href="newRequest.html"><button>Place new request</button></a>
-                </div>
-            </div>
-            <div class="view-request-card cards">
-                <div class="cardHeader">
-                    <h3>Assets Requested</h3>
-                    <!-- a logic to get the number of requested assets goes here -->
-                    <p id="numberOfAssetsRequested">2</p>
-                </div>
-                <div class="cardBtn">
-                    <a href="#requestSection"><button>View all Requests</button></a>
-                </div>
-            </div>
-            <div class="cards">
-                <div class="cardHeader">
-                    <h3>Assigned Assets</h3>
-                    <!-- a logic to get the number of assigned assets goes here -->
-                    <p id="numberOfAssignedAssets">3</p>
-                </div>
-                <div class="cardBtn">
-                    <a href=".\employeeAssets.html"><button>View All Assets</button></a>
-                </div>
-            </div>
+        <div class="cardBtn">
+            <a href="{{url_for('main.requests')}}"><button>View all Requests</button></a>
         </div>
+    </div>
+    <div class="cards">
+        <div class="cardHeader">
+            <h3>Assigned Assets</h3>
+            <!-- a logic to get the number of assigned assets goes here -->
+            <p id="numberOfAssignedAssets">{{assigned_asset_count}}</p>
+        </div>
+        <div class="cardBtn">
+            <a href="{{url_for('main.view_assets', employee_number=current_user.employee_number)}}"><button>View All Assets</button></a>
+        </div>
+    </div>
+</div>
 
-        <!-- assets -->
-         <div class="requestWrapper" id="requestSection">
-            <div class="head">
-                <h2>Requests</h2>
-                <a href="newRequest.html"> Create new request     <i class="fa-solid fa-plus" ></i> </a> 
-            </div>
-            <div class="requestTable">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="idRow">Asset ID</th>
-                            <th class="nameRow">Name</th>
-                            <th class="quantityRow">Quantity</th>
-                            <th class="dateRow">Request Date</th>
-                            <th class="statusRow">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="nodata">
-                            <td colspan="5">No data available</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-         </div>
-         
-    </section>
-</body>
-</html>
+<!-- assets -->
+<div class="requestWrapper" id="requestSection">
+<div class="head">
+    <h2>Requests</h2>
+    <a href="{{url_for('main.request_asset')}}"> Create new request <i class="fa-solid fa-plus" ></i> </a> 
+</div>
+<div class="requestTable">
+    <table>
+        <thead>
+            <tr>
+                <th class="idRow">Asset ID</th>
+                <th class="nameRow">Name</th>
+                <th class="quantityRow">Asset Type</th>
+                <th class="quantityRow">Quantity</th>
+                <th class="dateRow">Request Date</th>
+                <th class="statusRow">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%if pending_requests%}
+            {%for request in pending_requests %}
+            <tr>
+                <td>{{request.item.serial_number}}</td>
+                <td>{{request.item.asset.name}}</td>
+                <td>{{request.item.name}}</td>
+                <td>{{request.quantity}}</td>
+                <td>{{request.request_date}}</td>
+                <td>{{request.status}}</td>
+                <td><a class="btn btn-outline-danger" href="{{url_for('main.cancel_request', id=request.id)}}" role="button">Cancel</a></td>
+            </tr>
+            {%endfor%}
+            {%else%}
+            <tr class="nodata">
+                <td colspan="5">No data available</td>
+            </tr>
+            {%endif%}
+        </tbody>
+    </table>
+</div>
+</div>
+{%endblock%}

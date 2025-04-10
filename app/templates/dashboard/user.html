@@ -1,0 +1,89 @@
+{% extends 'dashboard/base.html'%}
+{% from "bootstrap5/form.html" import render_form %}
+
+{%block head%}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='css/profile.css')}}">
+{%endblock%}
+{% block title %}Flow Asset - Profile{% endblock %}
+
+{%block page_header%}{%endblock%}
+
+{%block page_content%}
+<div class="container" >
+    <div class="profile-header">
+        <h1>My Profile</h1>
+    </div>
+
+    <div class="profile-card" id="profileCard">
+        <div class="profile-picture">
+            <img src="{{employee.gravatar()}}" alt="Profile Picture" id="profileImage">
+        </div>
+        <div class="profile-details">
+            <div class="detail-group">
+                <label>Employee Number</label>
+                <div class="detail-value" id="employeeNumberValue">{{employee.employee_number}}</div>
+            </div>
+            {% if employee.fullname or employee.location %}
+                {% if employee.fullname %}
+                <div class="detail-group">
+                    <label>Full Name</label>
+                    <div class="detail-value" id="fullnameValue">{{employee.fullname}}</div>
+                </div>
+                {%endif%}
+                {% if employee.location %}
+                <div class="detail-group">
+                    <label>Location</label>
+                    from <a href="http://maps.google.com/?q={{ employee.location }}" class="detail-value" id="locationValue">{{employee.location}}</a>
+                </div>
+                {%endif%}
+            {%endif%}
+            <div class="detail-group">
+                <label>Job Description</label>
+                <div class="detail-value" id="jobDescriptionValue">{{employee.job_description}}</div>
+            </div>
+
+            <div class="detail-group">
+                <label>Join Date</label>
+                <div class="detail-value" id="joinDateValue">{{moment(employee.date_joined).format('LLL')}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="action-buttons">
+        {% if employee == current_user %}
+        <a href="{{url_for('main.edit_profile')}}" class="btn btn-primary" id="editBtn">
+            <i class="fas fa-edit"></i> Edit Profile
+        </a>
+        {% endif %}
+        {% if current_user.is_hr() %}
+        <a href="{{url_for('main.hr.edit_profile_hr', id=employee.id)}}" class="btn btn-danger">
+            <i class="fas fa-edit"></i> Edit Profile [HR]
+        </a>
+        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <i class="fas fa-trash-alt"></i> Delete Account
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Account Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to <strong>delete</strong> this account?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <form action="{{url_for('main.hr.delete_account', employee_number=employee.employee_number)}}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+{%endblock%}
